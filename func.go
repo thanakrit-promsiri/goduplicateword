@@ -31,7 +31,7 @@ func ProcessPrepareText(txt string) string {
 	return txt
 }
 
-func processPrepareInputFile(inputpath string) string {
+func ProcessPrepareInputFile(inputpath string) string {
 	files, err := ioutil.ReadDir(inputpath)
 	if err != nil {
 		log.Fatal(err)
