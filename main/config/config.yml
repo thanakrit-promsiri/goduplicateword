@@ -1,0 +1,16 @@
+sourcefilerepository:
+  rootdirectorypath: "./file_repo"
+  directoryprepare: "/prepare"
+  directoryoutput: "/output"
+  directoryinput: "/input"
+  configwordtospace: "./config/wordconfig/word_convert_to_space.txt"
+  configwordtoremove: "./config/wordconfig/word_for_remove.txt"
+logger:
+  logpath: "./log/"
+  initlogpath: "initlog/itaxstartedconsumer.log"
+  mainlogpath: "mainlog/itaxmain.log"
+  debuglogpath: "tracelog/itaxtrace.log" 
+  maxsize:    64
+  maxage:     60
+  #maxbackups: 90
+  compress:   true
