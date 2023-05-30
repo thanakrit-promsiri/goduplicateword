@@ -19,3 +19,23 @@ func ProcessMapReduce(txt string) map[string]int {
 	}
 	return reduceTxt
 }
+
+func ProcessPrepareText(txt string) string {
+
+	txt = textRemove(txt)
+	txt = textSpace(txt)
+	txt = textInsertSpace(txt)
+	return txt
+}
+
+func textRemove(txt string) string {
+	return txt
+}
+
+func textSpace(txt string) string {
+	return txt
+}
+
+func textInsertSpace(txt string) string {
+	return txt
+}
