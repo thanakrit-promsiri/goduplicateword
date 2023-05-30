@@ -1,6 +1,9 @@
 package goduplicateword
 
 import (
+	"fmt"
+	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -26,6 +29,17 @@ func ProcessPrepareText(txt string) string {
 	txt = textSpace(txt)
 	txt = textInsertSpace(txt)
 	return txt
+}
+
+func processPrepareInputFile(inputpath string) string {
+	files, err := ioutil.ReadDir(inputpath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range files {
+		fmt.Println(file.Name(), file.IsDir())
+	}
 }
 
 func textRemove(txt string) string {
