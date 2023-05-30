@@ -1,3 +1,3 @@
-module goduplicateword
+module github.com/thanakrit-promsiri/goduplicateword
 
-go 1.18
+go 1.20
