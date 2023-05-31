@@ -6,8 +6,8 @@ import (
 )
 
 func TestProcessMapReduce(t *testing.T) {
-
-	processMapReduce := ProcessMapReduce("xx vv xx")
+	reduceTxt := make(map[string]int)
+	processMapReduce := ProcessMapReduce("xx vv xx", reduceTxt)
 
 	if nil == processMapReduce {
 		t.Error("processMapReduce is nil")

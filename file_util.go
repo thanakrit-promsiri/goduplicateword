@@ -5,23 +5,11 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"strings"
+	"path/filepath"
 )
 
-func ProcessPrepareInputFile(inputpath string) {
-	files, err := ioutil.ReadDir(inputpath)
-	if err != nil {
-		log.Fatal(err)
-		panic(err)
-	}
-
-	for _, file := range files {
-		fmt.Println(file.Name(), file.IsDir())
-	}
-}
-
-func CollectInputFileName(inputPath string) []string {
-	files, err := ioutil.ReadDir(inputPath)
+func CollectInputFileName(path string) []string {
+	files, err := ioutil.ReadDir(path)
 	var txtfile []string
 
 	if err != nil {
@@ -29,9 +17,8 @@ func CollectInputFileName(inputPath string) []string {
 		panic(err)
 	} else {
 		for _, file := range files {
-			fullpath := inputPath + "/" + file.Name()
-			fmt.Println(fullpath)
-			txtfile = append(txtfile, fullpath)
+			filename := file.Name()
+			txtfile = append(txtfile, filename)
 		}
 	}
 
@@ -60,6 +47,15 @@ func PathExists(path string) bool {
 		result = false
 	}
 	return result
+}
+
+func GetAbsPath(path string) string {
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		panic(err)
+	}
+	// Print the absolute path of the file
+	return absPath
 }
 
 func CreateDir(path string) {
@@ -93,10 +89,22 @@ func ReadFile(path string) string {
 	return result
 }
 
-func ReadWordConfig(path string) []string {
-
-	var result string = ReadFile(path)
-	result = strings.ReplaceAll(result, "\r", "")
-	arr := strings.Split(result, "\n")
-	return arr
+func WriteFile(pathfile string, filecontent string) {
+	f, err := os.Create(pathfile)
+	if err != nil {
+		log.Fatalf("unable to Create file: %v", err)
+		return
+	}
+	l, err := f.WriteString(filecontent)
+	if err != nil {
+		log.Fatalf("unable to WriteString file: %v", err)
+		f.Close()
+		return
+	}
+	fmt.Println(l, "bytes written successfully")
+	err = f.Close()
+	if err != nil {
+		log.Fatalf("unable to WriteString file: %v", err)
+		return
+	}
 }

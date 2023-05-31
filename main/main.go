@@ -12,12 +12,13 @@ var conf viperconf.Configuration
 var inputPath string
 var preparePath string
 var outputPath string
+
 var configWordToSpace string
 var configWordToRemove string
+var configWordInsertSpace string
 
-func initConfig() {
+func initConfigAndDir() {
 	conf = viperconf.InitConfig()
-	fmt.Println(viperconf.ViperEcho())
 
 	rootPath := conf.Sourcefilerepository.RootDirectoryPath
 	inputPath = rootPath + conf.Sourcefilerepository.DirectoryInput
@@ -26,29 +27,81 @@ func initConfig() {
 
 	configWordToSpace = conf.Sourcefilerepository.ConfigWordToSpace
 	configWordToRemove = conf.Sourcefilerepository.ConfigWordToRemove
+	configWordInsertSpace = conf.Sourcefilerepository.ConfigWordInsertSpace
 
+	fmt.Println("Root Folder:", engine.GetAbsPath(rootPath))
+
+	if engine.PathExists(rootPath) {
+		fmt.Println("Check Root Folder is exists : OK")
+	} else {
+		panic("Root Folder is not exists")
+	}
+
+	fmt.Println("Input Folder:", engine.GetAbsPath(inputPath))
 	fmt.Println()
-	fmt.Println("inputPath :", inputPath)
-	fmt.Println("preparepath :", preparePath)
-	fmt.Println("outputpath :", outputPath)
+
+	if engine.PathExists(inputPath) {
+		files := engine.CollectInputFileName(inputPath)
+		fmt.Println("Check Input Folder is exists : OK , Total files :", len(files))
+		fmt.Println("Check Input Folder is exists : ", files)
+
+	} else {
+		panic("Input Folder is not exists")
+	}
 	fmt.Println()
-}
-
-func main() {
-
-	initConfig()
 
 	engine.CleanCreateDirPrepareAndOutput(preparePath, outputPath)
 
-	fmt.Println("xxx:", configWordToSpace)
+	fmt.Println("Clean And Create Prepare Folder:", engine.GetAbsPath(preparePath))
+	fmt.Println("Clean And Create Output Folder :", engine.GetAbsPath(outputPath))
 
-	fmt.Println("xxx:", engine.ReadWordConfig(configWordToSpace))
+}
 
-	InputFileName := engine.CollectInputFileName(inputPath)
+func prepareFileInput() {
+	var wordToRemove []string = engine.ReadWordConfig(configWordToRemove)
+	var wordToSpace []string = engine.ReadWordConfig(configWordToSpace)
+	var WordInsertSpace []string = engine.ReadWordConfig(configWordInsertSpace)
 
-	fmt.Println("map:", InputFileName)
+	var txt string = ""
 
-	processMapReduce := engine.ProcessMapReduce("xx vv xx")
+	files := engine.CollectInputFileName(inputPath)
+	for _, file := range files {
 
-	fmt.Println("map:", processMapReduce)
+		var pathInputReadFile string = inputPath + "/" + file
+		var pathPrepareWriteFile string = preparePath + "/" + file
+
+		txt = engine.ReadFile(pathInputReadFile)
+		txt = engine.ProcessPrepareText(txt, wordToRemove, wordToSpace, WordInsertSpace)
+		engine.WriteFile(pathPrepareWriteFile, txt)
+	}
+
+}
+
+func processDuplication() {
+	reduceTxtmap := make(map[string]int)
+	files := engine.CollectInputFileName(preparePath)
+	for _, file := range files {
+
+		var pathPrepareFile string = preparePath + "/" + file
+
+		txt := engine.ReadFile(pathPrepareFile)
+		reduceTxtmap = engine.ProcessMapReduce(txt, reduceTxtmap)
+		//engine.WriteFile(pathPrepareWriteFile, txt)
+
+	}
+
+	engine.MapToCSVtext(reduceTxtmap, outputPath+"/summary.csv")
+	fmt.Println("Summary file Output successfully:", engine.GetAbsPath(outputPath+"/summary.csv"))
+
+}
+
+func main() {
+	var any string
+	initConfigAndDir()
+	prepareFileInput()
+	processDuplication()
+
+	fmt.Println("press X and Enter to exit.....")
+	fmt.Scan(&any)
+
 }

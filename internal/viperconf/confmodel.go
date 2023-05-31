@@ -8,12 +8,13 @@ type Configuration struct {
 
 // AppConfiguration is struct of App info
 type SourceFileRepositoryConfiguration struct {
-	RootDirectoryPath  string
-	DirectoryPrepare   string
-	DirectoryOutput    string
-	DirectoryInput     string
-	ConfigWordToSpace  string
-	ConfigWordToRemove string
+	RootDirectoryPath     string
+	DirectoryPrepare      string
+	DirectoryOutput       string
+	DirectoryInput        string
+	ConfigWordToSpace     string
+	ConfigWordToRemove    string
+	ConfigWordInsertSpace string
 }
 
 // LoggerConfiguration is struct of Logger
