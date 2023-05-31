@@ -13,15 +13,16 @@ func ProcessMapReduce(txt string, reduceTxt map[string]int) map[string]int {
 	var wordSlice = strings.Split(txt, " ")
 
 	for _, word := range wordSlice {
+		if len(word) > 0 {
+			word = strings.ToLower(word)
+			word = strings.TrimSpace(word)
 
-		word = strings.ToLower(word)
-		word = strings.TrimSpace(word)
-
-		value, exists := reduceTxt[word]
-		if exists {
-			reduceTxt[word] = value + 1
-		} else {
-			reduceTxt[word] = 1
+			value, exists := reduceTxt[word]
+			if exists {
+				reduceTxt[word] = value + 1
+			} else {
+				reduceTxt[word] = 1
+			}
 		}
 
 	}

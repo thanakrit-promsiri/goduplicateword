@@ -42,6 +42,11 @@ func MapToCSVtext(mapReduce map[string]int, path string) {
 
 	var wordSortedArr []string = SortKey(mapReduce)
 
+	r := make([]string, 0, 2)
+	r = append(r, "Word")
+	r = append(r, "Found")
+	csvWriter.Write(r)
+
 	for _, wordSorted := range wordSortedArr {
 		r := make([]string, 0, 2)
 		r = append(r, wordSorted)
@@ -49,7 +54,7 @@ func MapToCSVtext(mapReduce map[string]int, path string) {
 
 		err := csvWriter.Write(r)
 		if err != nil {
-			// handle error
+			panic(err)
 		}
 	}
 	defer csvWriter.Flush()
@@ -62,7 +67,5 @@ func SortKey(mapReduce map[string]int) []string {
 	}
 	sort.Strings(keys)
 	return keys
-	//for _, k := range keys {
-	//	fmt.Println(k, mapReduce[k])
-	//}
+
 }
